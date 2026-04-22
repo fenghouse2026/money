@@ -2,8 +2,8 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>承峰風格｜利息試算工具</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>利息試算工具｜手機版</title>
   <style>
     :root {
       --bg: #f3f5f8;
@@ -13,277 +13,143 @@
       --muted: #6b7280;
       --title-gray: #6e6e6e;
       --title-blue: #366092;
-      --title-red: #953734;
       --sub-blue: #dbe5f1;
-      --sub-red: #f2dbdb;
       --head-gray: #bfbfbf;
       --head-blue: #c6d9f0;
       --head-blue-strong: #8db3e2;
-      --head-red: #e5b8b7;
-      --head-red-strong: #d99594;
       --input-yellow: #fff200;
-      --ok: #166534;
+      --danger: #b91c1c;
+      --shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+      --radius: 16px;
     }
 
-    * { box-sizing: border-box; }
-    body {
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
       margin: 0;
+      padding: 0;
       background: var(--bg);
       color: var(--text);
       font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
-    .wrap {
-      max-width: 1480px;
-      margin: 20px auto 40px;
-      padding: 0 14px;
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 14px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .toolbar-left,
-    .toolbar-right {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .brand {
+    body { padding: 12px; }
+    .wrap { width: 100%; max-width: 780px; margin: 0 auto; }
+    .toolbar { display: grid; gap: 10px; margin-bottom: 12px; }
+    .brand-box {
       background: var(--card);
       border: 1px solid #d6dbe3;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow);
     }
-
-    .hint {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
+    .brand { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; }
+    .action-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .btn {
       appearance: none;
       border: 1px solid #cfd6df;
       background: #fff;
       color: #111827;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 14px;
+      border-radius: 12px;
+      padding: 12px 10px;
+      font-size: 15px;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 800;
+      min-height: 46px;
     }
-    .btn:hover { transform: translateY(-1px); }
-
     .sheet {
       background: var(--card);
       border: 1px solid #d7dce4;
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: var(--shadow);
       overflow: hidden;
     }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .panel {
+    .panel, .summary-card {
       border: 2px solid var(--grid);
       background: #fff;
       overflow: hidden;
+      margin-bottom: 12px;
     }
-
-    .panel-title {
+    .panel-title, .summary-head {
       color: #fff;
       text-align: center;
-      font-size: 30px;
-      font-weight: 700;
+      font-size: 24px;
+      font-weight: 800;
       padding: 12px 10px;
       letter-spacing: 1px;
     }
     .panel-title.gray { background: var(--title-gray); }
-    .panel-title.blue { background: var(--title-blue); }
-    .panel-title.red { background: var(--title-red); }
-
+    .summary-head { background: var(--title-blue); }
+    .summary-sub {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 800;
+      padding: 10px;
+      background: var(--sub-blue);
+    }
     table.sheet-table {
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
     }
-    .sheet-table td,
-    .sheet-table th {
+    .sheet-table td, .sheet-table th {
       border: 2px solid var(--grid);
-      padding: 9px 10px;
-      font-size: 16px;
+      padding: 10px 8px;
+      font-size: 15px;
       vertical-align: middle;
+      word-break: break-word;
     }
-
-    .label { background: #fff; text-align: right; font-weight: 700; }
-    .note { color: #555; font-size: 13px; }
+    .label { background: #fff; text-align: right; font-weight: 800; }
+    .note { color: #555; font-size: 12px; line-height: 1.5; }
     .center { text-align: center; }
     .right { text-align: right; }
-
-    .input-cell {
-      background: var(--input-yellow);
-      font-weight: 700;
-      padding: 0 !important;
+    .input-cell { background: var(--input-yellow); font-weight: 800; padding: 0 !important; }
+    .input-cell input, .input-cell select {
+      width: 100%; border: 0; background: transparent; padding: 14px 12px; font-size: 18px;
+      font-weight: 800; text-align: right; outline: none; font-family: inherit; color: #111827; min-height: 48px;
     }
-    .input-cell input,
-    .input-cell select {
-      width: 100%;
-      border: 0;
-      background: transparent;
-      padding: 10px 12px;
-      font-size: 18px;
-      font-weight: 700;
-      text-align: right;
-      outline: none;
-      font-family: inherit;
+    .input-cell select { text-align-last: right; }
+    .summary td { font-size: 15px; }
+    .summary .v { font-size: 30px; font-weight: 400; text-align: right; }
+    .summary .ratio { font-size: 20px; color: #374151; text-align: right; white-space: nowrap; }
+    .detail-wrap {
+      overflow: auto; border: 2px solid var(--grid); background: #fff; -webkit-overflow-scrolling: touch;
     }
-
-    .check-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-weight: 700;
+    .detail-table {
+      width: 100%; min-width: 650px; border-collapse: collapse; table-layout: fixed; background: #fff;
     }
-    .check-wrap input {
-      width: 18px;
-      height: 18px;
-    }
-
-    .muted-box {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .compare {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .sub-title {
-      color: #fff;
-      text-align: center;
-      font-size: 28px;
-      font-weight: 700;
-      padding: 10px;
-    }
-    .sub-title.blue { background: var(--title-blue); }
-    .sub-title.red { background: var(--title-red); }
-    .sub-desc {
-      text-align: center;
-      font-size: 18px;
-      font-weight: 700;
-      padding: 10px;
-    }
-    .sub-desc.blue { background: var(--sub-blue); }
-    .sub-desc.red { background: var(--sub-red); }
-
-    .summary td {
-      font-size: 17px;
-    }
-    .summary .v {
-      font-size: 28px;
-      font-weight: 400;
-      text-align: right;
-    }
-    .summary .ratio {
-      font-size: 24px;
-      color: #374151;
-      text-align: right;
-      white-space: nowrap;
-    }
-
-    .detail-head th {
-      text-align: center;
-      font-weight: 700;
-    }
+    .detail-table th, .detail-table td { border: 1px solid var(--grid); padding: 8px 8px; font-size: 14px; }
+    .detail-table tbody tr:nth-child(even) { background: #fafafa; }
     .gray-head { background: var(--head-gray); }
     .blue-head { background: var(--head-blue); }
     .blue-head-strong { background: var(--head-blue-strong); }
-    .red-head { background: var(--head-red); }
-    .red-head-strong { background: var(--head-red-strong); }
+    .error { color: var(--danger); font-weight: 800; }
 
-    .detail-wrap {
-      overflow: auto;
-      border: 2px solid var(--grid);
-    }
-
-    .detail-table {
-      width: 100%;
-      min-width: 1150px;
-      border-collapse: collapse;
-      table-layout: fixed;
-      background: #fff;
-    }
-    .detail-table th,
-    .detail-table td {
-      border: 1px solid var(--grid);
-      padding: 8px 10px;
-      font-size: 15px;
-    }
-    .detail-table tbody tr:nth-child(even) {
-      background: #fafafa;
-    }
-
-    .foot {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      background: #eef6ff;
-      border: 1px solid #c8defe;
-      border-radius: 999px;
-      font-size: 13px;
-      color: #1d4ed8;
-      font-weight: 700;
-    }
-
-    .ok-note {
-      color: var(--ok);
-      font-weight: 700;
-    }
-
-    @media (max-width: 980px) {
-      .grid-2,
-      .compare {
-        grid-template-columns: 1fr;
-      }
-      .panel-title,
-      .sub-title { font-size: 24px; }
-      .sub-desc { font-size: 16px; }
+    @media (max-width: 640px) {
+      body { padding: 8px; }
+      .sheet { padding: 8px; border-radius: 14px; }
+      .panel-title, .summary-head { font-size: 20px; }
+      .summary-sub { font-size: 14px; }
+      .sheet-table td, .sheet-table th { font-size: 14px; padding: 8px 6px; }
       .summary .v { font-size: 24px; }
+      .summary .ratio { font-size: 18px; }
+      .action-grid { grid-template-columns: repeat(2, 1fr); }
+      .mobile-stack colgroup { display: none; }
+      .mobile-stack, .mobile-stack tbody, .mobile-stack tr, .mobile-stack td { display: block; width: 100%; }
+      .mobile-stack tr { border-bottom: 2px solid var(--grid); }
+      .mobile-stack tr:last-child { border-bottom: 0; }
+      .mobile-stack td { border: 0; border-top: 2px solid var(--grid); }
+      .mobile-stack td:first-child { border-top: 0; }
+      .mobile-stack .label, .mobile-stack .note, .mobile-stack .center, .mobile-stack .right { text-align: left; }
+      .mobile-stack .input-cell input, .mobile-stack .input-cell select { text-align: left; font-size: 17px; }
+      .brand { font-size: 20px; }
     }
 
     @media print {
-      body { background: #fff; }
-      .wrap { max-width: none; margin: 0; padding: 0; }
+      body { background: #fff; padding: 0; }
       .toolbar { display: none; }
+      .wrap { max-width: none; }
       .sheet { box-shadow: none; border: 0; padding: 0; }
     }
   </style>
@@ -291,274 +157,110 @@
 <body>
   <div class="wrap">
     <div class="toolbar">
-      <div class="toolbar-left">
-        <div class="brand">承峰風格｜利息試算工具</div>
-        <div class="tag">黃底可直接輸入</div>
-        <div class="tag">左右對照試算</div>
-        <div class="tag">可列印 / 可匯出 CSV</div>
+      <div class="brand-box">
+        <div class="brand">利息試算工具</div>
       </div>
-      <div class="toolbar-right">
-        <div class="hint">先輸入貸款條件，結果會自動更新</div>
+      <div class="action-grid">
         <button class="btn" id="calcBtn">重新試算</button>
-        <button class="btn" id="csvBtn">匯出明細 CSV</button>
+        <button class="btn" id="excelBtn">匯出成 Excel</button>
         <button class="btn" id="printBtn">列印</button>
         <button class="btn" id="resetBtn">重設</button>
       </div>
     </div>
 
     <div class="sheet">
-      <div class="grid-2">
-        <div class="panel">
-          <div class="panel-title gray">貸款試算</div>
-          <table class="sheet-table">
-            <colgroup>
-              <col style="width: 26%" />
-              <col style="width: 24%" />
-              <col style="width: 50%" />
-            </colgroup>
-            <tr>
-              <td class="label">貸款金額</td>
-              <td class="input-cell"><input id="loanAmount" type="number" value="7380000" step="10000" /></td>
-              <td class="note">元 - （輸入借款總額）</td>
-            </tr>
-            <tr>
-              <td class="label">年利率</td>
-              <td class="input-cell"><input id="annualRate" type="number" value="2.2" step="0.001" /></td>
-              <td class="note">% - （可輸入到小數點第 3 位）</td>
-            </tr>
-            <tr>
-              <td class="label">貸款年數</td>
-              <td class="input-cell"><input id="loanYears" type="number" value="30" step="1" /></td>
-              <td class="note">年 - 自動換算期數（月）</td>
-            </tr>
-            <tr>
-              <td class="label">貸款期數</td>
-              <td class="input-cell"><input id="loanMonths" type="number" value="360" step="1" /></td>
-              <td class="note">月 - （一年 12 個月換算）</td>
-            </tr>
-            <tr>
-              <td class="label">寬限期數</td>
-              <td class="input-cell"><input id="graceMonths" type="number" value="36" step="1" /></td>
-              <td class="note">月 - 寬限期內僅繳利息</td>
-            </tr>
-            <tr>
-              <td class="label">顯示明細筆數</td>
-              <td class="input-cell">
-                <select id="displayRows">
-                  <option value="12">12 期</option>
-                  <option value="24" selected>24 期</option>
-                  <option value="60">60 期</option>
-                  <option value="120">120 期</option>
-                  <option value="9999">全部</option>
-                </select>
-              </td>
-              <td class="note">下方明細表顯示筆數</td>
-            </tr>
-          </table>
-        </div>
-
-        <div class="panel">
-          <div class="panel-title gray">進階試算（啟用需勾選）</div>
-          <table class="sheet-table">
-            <colgroup>
-              <col style="width: 32%" />
-              <col style="width: 22%" />
-              <col style="width: 22%" />
-              <col style="width: 24%" />
-            </colgroup>
-            <tr>
-              <td colspan="4" class="center">
-                <label class="check-wrap"><input type="checkbox" id="useAdvanced" /> 啟用分段利率優惠</label>
-              </td>
-            </tr>
-            <tr>
-              <td class="label">第一段利率（%）</td>
-              <td class="input-cell"><input id="rate1" type="number" value="2.4" step="0.001" /></td>
-              <td class="label">期數</td>
-              <td class="input-cell"><input id="months1" type="number" value="12" step="1" /></td>
-            </tr>
-            <tr>
-              <td class="label">第二段利率（%）</td>
-              <td class="input-cell"><input id="rate2" type="number" value="2.4" step="0.001" /></td>
-              <td class="label">期數</td>
-              <td class="input-cell"><input id="months2" type="number" value="12" step="1" /></td>
-            </tr>
-            <tr>
-              <td class="label">第三段利率（%）</td>
-              <td class="input-cell"><input id="rate3" type="number" value="2.4" step="0.001" /></td>
-              <td class="label">期數</td>
-              <td class="input-cell"><input id="months3" type="number" value="12" step="1" /></td>
-            </tr>
-            <tr>
-              <td colspan="4" class="muted-box">
-                ・未勾選時，全部期數以同一利率試算。<br>
-                ・勾選後，會依照 1 → 2 → 3 段利率往後套用。<br>
-                ・若分段總期數不足，剩餘期數自動改回一般年利率。<br>
-                <span class="ok-note">・本息平均會在利率變動時重新依剩餘本金 / 剩餘期數重算月付。</span>
-              </td>
-            </tr>
-          </table>
-        </div>
+      <div class="panel">
+        <div class="panel-title gray">貸款試算</div>
+        <table class="sheet-table mobile-stack">
+          <colgroup>
+            <col style="width: 28%" />
+            <col style="width: 26%" />
+            <col style="width: 46%" />
+          </colgroup>
+          <tr>
+            <td class="label">貸款金額</td>
+            <td class="input-cell"><input id="loanAmount" type="number" value="8800000" step="10000" inputmode="numeric" /></td>
+            <td class="note">元 - 請輸入借款總額</td>
+          </tr>
+          <tr>
+            <td class="label">年利率</td>
+            <td class="input-cell"><input id="annualRate" type="number" value="2.2" step="0.001" inputmode="decimal" /></td>
+            <td class="note">% - 可輸入到小數點第 3 位</td>
+          </tr>
+          <tr>
+            <td class="label">貸款年限</td>
+            <td class="input-cell"><input id="loanYears" type="number" value="30" step="1" inputmode="numeric" /></td>
+            <td class="note">年 - 自動依年限完整列出所有期數</td>
+          </tr>
+        </table>
       </div>
 
-      <div class="compare">
-        <div class="panel">
-          <div class="sub-title blue">定額年金（本息平均）償還法</div>
-          <div class="sub-desc blue">每期償還固定金額，最常見的做法</div>
-          <table class="sheet-table summary">
-            <colgroup>
-              <col style="width: 36%" />
-              <col style="width: 42%" />
-              <col style="width: 22%" />
-            </colgroup>
-            <tr>
-              <td class="label">總繳金額</td>
-              <td class="v" id="sumEqualTotalPaid">-</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td class="label">總繳利息</td>
-              <td class="v" id="sumEqualInterest">-</td>
-              <td class="ratio" id="sumEqualInterestRatio">-</td>
-            </tr>
-            <tr>
-              <td class="label">最高月繳金額</td>
-              <td class="v" id="sumEqualMaxPayment">-</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td class="label">寬限期月付</td>
-              <td class="v" id="sumEqualGracePayment">-</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td class="label">長期年化利率</td>
-              <td class="v" id="sumEqualLongRate">-</td>
-              <td></td>
-            </tr>
-          </table>
-        </div>
-
-        <div class="panel">
-          <div class="sub-title red">定額本金（本金平均）償還法</div>
-          <div class="sub-desc red">每期償還固定本金，較快還清本金，利息通常較低</div>
-          <table class="sheet-table summary">
-            <colgroup>
-              <col style="width: 36%" />
-              <col style="width: 42%" />
-              <col style="width: 22%" />
-            </colgroup>
-            <tr>
-              <td class="label">總繳金額</td>
-              <td class="v" id="sumPrincipalTotalPaid">-</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td class="label">總繳利息</td>
-              <td class="v" id="sumPrincipalInterest">-</td>
-              <td class="ratio" id="sumPrincipalInterestRatio">-</td>
-            </tr>
-            <tr>
-              <td class="label">最高月繳金額</td>
-              <td class="v" id="sumPrincipalMaxPayment">-</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td class="label">最後月繳金額</td>
-              <td class="v" id="sumPrincipalLastPayment">-</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td class="label">長期年化利率</td>
-              <td class="v" id="sumPrincipalLongRate">-</td>
-              <td></td>
-            </tr>
-          </table>
-        </div>
+      <div class="summary-card">
+        <div class="summary-head">定額年金（本息平均）償還法</div>
+        <div class="summary-sub">每期償還固定金額</div>
+        <table class="sheet-table summary mobile-stack">
+          <colgroup>
+            <col style="width: 36%" />
+            <col style="width: 42%" />
+            <col style="width: 22%" />
+          </colgroup>
+          <tr>
+            <td class="label">每月繳款金額</td>
+            <td class="v" id="sumMonthlyPayment">-</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="label">總繳金額</td>
+            <td class="v" id="sumEqualTotalPaid">-</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="label">總繳利息</td>
+            <td class="v" id="sumEqualInterest">-</td>
+            <td class="ratio" id="sumEqualInterestRatio">-</td>
+          </tr>
+          <tr>
+            <td class="label">長期年化利率</td>
+            <td class="v" id="sumEqualLongRate">-</td>
+            <td></td>
+          </tr>
+        </table>
       </div>
 
       <div class="detail-wrap">
         <table class="detail-table" id="detailTable">
           <thead>
-            <tr class="detail-head">
+            <tr>
               <th class="gray-head">期數</th>
-              <th class="blue-head">本息平均<br>還本金額</th>
-              <th class="blue-head">本息平均<br>繳息金額</th>
-              <th class="blue-head-strong">本息平均<br>本息合計</th>
-              <th class="blue-head">本息平均<br>貸款餘額</th>
-              <th class="red-head">本金平均<br>還本金額</th>
-              <th class="red-head">本金平均<br>繳息金額</th>
-              <th class="red-head-strong">本金平均<br>本息合計</th>
-              <th class="red-head">本金平均<br>貸款餘額</th>
+              <th class="blue-head">還本金額</th>
+              <th class="blue-head">繳息金額</th>
+              <th class="blue-head-strong">本息合計</th>
+              <th class="blue-head">貸款餘額</th>
               <th class="gray-head">當期利率</th>
-              <th class="gray-head">模式</th>
             </tr>
           </thead>
           <tbody id="detailBody"></tbody>
         </table>
-      </div>
-
-      <div class="foot">
-        本工具為前端 HTML 單檔版，可直接開啟使用。你上傳的原始風格檔案為參考來源之一 fileciteturn0file0。
       </div>
     </div>
   </div>
 
   <script>
     const $ = (id) => document.getElementById(id);
-
-    const formatMoney = (num, digits = 0) => {
-      const n = Number(num || 0);
-      return n.toLocaleString('zh-Hant-TW', {
-        minimumFractionDigits: digits,
-        maximumFractionDigits: digits,
-      });
-    };
-
+    const formatMoney = (num, digits = 0) => Number(num || 0).toLocaleString('zh-Hant-TW', {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    });
     const formatPercent = (num, digits = 1) => `${Number(num || 0).toFixed(digits)}%`;
 
     function getInputs() {
-      const years = Number($('loanYears').value || 0);
-      const months = Number($('loanMonths').value || 0);
+      const loanYears = Number($('loanYears').value || 0);
       return {
         loanAmount: Number($('loanAmount').value || 0),
         annualRate: Number($('annualRate').value || 0),
-        loanYears: years,
-        loanMonths: months,
-        graceMonths: Number($('graceMonths').value || 0),
-        displayRows: Number($('displayRows').value || 24),
-        useAdvanced: $('useAdvanced').checked,
-        stages: [
-          { rate: Number($('rate1').value || 0), months: Number($('months1').value || 0) },
-          { rate: Number($('rate2').value || 0), months: Number($('months2').value || 0) },
-          { rate: Number($('rate3').value || 0), months: Number($('months3').value || 0) },
-        ],
+        loanYears,
+        loanMonths: Math.round(loanYears * 12),
       };
-    }
-
-    function syncMonthsFromYears() {
-      const years = Number($('loanYears').value || 0);
-      $('loanMonths').value = years > 0 ? years * 12 : 0;
-      calculate();
-    }
-
-    function syncYearsFromMonths() {
-      const months = Number($('loanMonths').value || 0);
-      $('loanYears').value = months > 0 ? (months / 12).toFixed(months % 12 === 0 ? 0 : 2) : 0;
-      calculate();
-    }
-
-    function getRateSchedule(totalMonths, baseRate, useAdvanced, stages) {
-      const schedule = [];
-      if (useAdvanced) {
-        stages.forEach(stage => {
-          for (let i = 0; i < stage.months; i += 1) {
-            if (schedule.length < totalMonths) schedule.push(stage.rate);
-          }
-        });
-      }
-      while (schedule.length < totalMonths) schedule.push(baseRate);
-      return schedule.slice(0, totalMonths);
     }
 
     function calcPayment(principal, monthlyRate, monthsLeft) {
@@ -567,245 +269,150 @@
       return principal * monthlyRate / (1 - Math.pow(1 + monthlyRate, -monthsLeft));
     }
 
-    function calculateEqualPayment(inputs, rateSchedule) {
+    function calculateEqualPayment(inputs) {
       const rows = [];
       let balance = inputs.loanAmount;
       let totalInterest = 0;
       let totalPaid = 0;
-      let maxPayment = 0;
-      let gracePayment = 0;
+      const monthlyRate = inputs.annualRate / 100 / 12;
+      const fixedPayment = calcPayment(balance, monthlyRate, inputs.loanMonths);
 
       for (let m = 1; m <= inputs.loanMonths; m += 1) {
-        const annualRate = rateSchedule[m - 1] || inputs.annualRate;
-        const monthlyRate = annualRate / 100 / 12;
-        let principalPaid = 0;
-        let interestPaid = balance * monthlyRate;
-        let payment = 0;
-        let mode = '正常攤還';
-
-        if (m <= inputs.graceMonths) {
-          payment = interestPaid;
-          mode = '寬限期';
-          if (m === 1) gracePayment = payment;
-        } else {
-          const monthsLeft = inputs.loanMonths - m + 1;
-          payment = calcPayment(balance, monthlyRate, monthsLeft);
-          principalPaid = payment - interestPaid;
-          if (principalPaid > balance) principalPaid = balance;
-          balance -= principalPaid;
-        }
-
-        if (balance < 0.01) balance = 0;
-        totalInterest += interestPaid;
-        totalPaid += payment;
-        if (payment > maxPayment) maxPayment = payment;
-
-        rows.push({
-          month: m,
-          annualRate,
-          principalPaid,
-          interestPaid,
-          payment,
-          balance,
-          mode,
-        });
-      }
-
-      return {
-        rows,
-        totalInterest,
-        totalPaid,
-        maxPayment,
-        gracePayment,
-      };
-    }
-
-    function calculateEqualPrincipal(inputs, rateSchedule) {
-      const rows = [];
-      let balance = inputs.loanAmount;
-      let totalInterest = 0;
-      let totalPaid = 0;
-      let maxPayment = 0;
-      let lastPayment = 0;
-      const repayMonths = Math.max(inputs.loanMonths - inputs.graceMonths, 0);
-      const fixedPrincipal = repayMonths > 0 ? inputs.loanAmount / repayMonths : 0;
-
-      for (let m = 1; m <= inputs.loanMonths; m += 1) {
-        const annualRate = rateSchedule[m - 1] || inputs.annualRate;
-        const monthlyRate = annualRate / 100 / 12;
         const interestPaid = balance * monthlyRate;
-        let principalPaid = 0;
-        let payment = 0;
-        let mode = '正常攤還';
+        let principalPaid = fixedPayment - interestPaid;
+        let payment = fixedPayment;
 
-        if (m <= inputs.graceMonths) {
-          payment = interestPaid;
-          mode = '寬限期';
-        } else {
-          principalPaid = Math.min(fixedPrincipal, balance);
+        if (m === inputs.loanMonths || principalPaid > balance) {
+          principalPaid = balance;
           payment = principalPaid + interestPaid;
-          balance -= principalPaid;
         }
 
+        balance -= principalPaid;
         if (balance < 0.01) balance = 0;
         totalInterest += interestPaid;
         totalPaid += payment;
-        if (payment > maxPayment) maxPayment = payment;
-        lastPayment = payment;
 
-        rows.push({
-          month: m,
-          annualRate,
-          principalPaid,
-          interestPaid,
-          payment,
-          balance,
-          mode,
-        });
+        rows.push({ month: m, principalPaid, interestPaid, payment, balance, annualRate: inputs.annualRate });
       }
 
-      return {
-        rows,
-        totalInterest,
-        totalPaid,
-        maxPayment,
-        lastPayment,
-      };
+      return { rows, totalInterest, totalPaid, monthlyPayment: fixedPayment };
     }
 
-    function renderSummary(inputs, equalPay, equalPrincipal) {
-      $('sumEqualTotalPaid').textContent = formatMoney(equalPay.totalPaid);
-      $('sumEqualInterest').textContent = formatMoney(equalPay.totalInterest);
-      $('sumEqualInterestRatio').textContent = formatPercent((equalPay.totalInterest / inputs.loanAmount) * 100, 1);
-      $('sumEqualMaxPayment').textContent = formatMoney(equalPay.maxPayment);
-      $('sumEqualGracePayment').textContent = formatMoney(equalPay.gracePayment);
+    function renderSummary(inputs, result) {
+      $('sumMonthlyPayment').textContent = formatMoney(result.monthlyPayment);
+      $('sumEqualTotalPaid').textContent = formatMoney(result.totalPaid);
+      $('sumEqualInterest').textContent = formatMoney(result.totalInterest);
+      $('sumEqualInterestRatio').textContent = formatPercent((result.totalInterest / inputs.loanAmount) * 100, 1);
       $('sumEqualLongRate').textContent = formatPercent(inputs.annualRate, 3);
-
-      $('sumPrincipalTotalPaid').textContent = formatMoney(equalPrincipal.totalPaid);
-      $('sumPrincipalInterest').textContent = formatMoney(equalPrincipal.totalInterest);
-      $('sumPrincipalInterestRatio').textContent = formatPercent((equalPrincipal.totalInterest / inputs.loanAmount) * 100, 1);
-      $('sumPrincipalMaxPayment').textContent = formatMoney(equalPrincipal.maxPayment);
-      $('sumPrincipalLastPayment').textContent = formatMoney(equalPrincipal.lastPayment);
-      $('sumPrincipalLongRate').textContent = formatPercent(inputs.annualRate, 3);
     }
 
-    function renderDetail(equalPayRows, equalPrincipalRows, displayRows) {
+    function renderDetail(rows) {
       const tbody = $('detailBody');
       tbody.innerHTML = '';
-      const limit = displayRows === 9999 ? equalPayRows.length : Math.min(displayRows, equalPayRows.length);
-
-      for (let i = 0; i < limit; i += 1) {
-        const a = equalPayRows[i];
-        const b = equalPrincipalRows[i];
+      for (let i = 0; i < rows.length; i += 1) {
+        const r = rows[i];
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td class="right">${a.month}</td>
-          <td class="right">${a.principalPaid ? formatMoney(a.principalPaid) : ''}</td>
-          <td class="right">${a.interestPaid ? formatMoney(a.interestPaid) : ''}</td>
-          <td class="right">${a.payment ? formatMoney(a.payment) : ''}</td>
-          <td class="right">${formatMoney(a.balance)}</td>
-          <td class="right">${b.principalPaid ? formatMoney(b.principalPaid) : ''}</td>
-          <td class="right">${b.interestPaid ? formatMoney(b.interestPaid) : ''}</td>
-          <td class="right">${b.payment ? formatMoney(b.payment) : ''}</td>
-          <td class="right">${formatMoney(b.balance)}</td>
-          <td class="right">${formatPercent(a.annualRate, 3)}</td>
-          <td class="center">${a.mode}</td>
+          <td class="right">${r.month}</td>
+          <td class="right">${formatMoney(r.principalPaid)}</td>
+          <td class="right">${formatMoney(r.interestPaid)}</td>
+          <td class="right">${formatMoney(r.payment)}</td>
+          <td class="right">${formatMoney(r.balance)}</td>
+          <td class="right">${formatPercent(r.annualRate, 3)}</td>
         `;
         tbody.appendChild(tr);
       }
     }
 
-    function exportCSV() {
+    function exportExcel() {
       const inputs = getInputs();
-      const rateSchedule = getRateSchedule(inputs.loanMonths, inputs.annualRate, inputs.useAdvanced, inputs.stages);
-      const equalPay = calculateEqualPayment(inputs, rateSchedule);
-      const equalPrincipal = calculateEqualPrincipal(inputs, rateSchedule);
-      const lines = [[
-        '期數','本息平均-還本金額','本息平均-繳息金額','本息平均-本息合計','本息平均-貸款餘額',
-        '本金平均-還本金額','本金平均-繳息金額','本金平均-本息合計','本金平均-貸款餘額','當期利率','模式'
-      ]];
+      const result = calculateEqualPayment(inputs);
+      const conditionRows = [
+        ['利息試算結果匯出'],
+        ['匯出時間', new Date().toLocaleString('zh-Hant-TW')],
+        ['貸款金額', Math.round(inputs.loanAmount)],
+        ['年利率(%)', inputs.annualRate],
+        ['貸款年限', inputs.loanYears],
+        ['貸款期數(月)', inputs.loanMonths],
+        ['每月繳款金額', Math.round(result.monthlyPayment)],
+        ['總繳金額', Math.round(result.totalPaid)],
+        ['總繳利息', Math.round(result.totalInterest)],
+        ['長期年化利率', `${Number(inputs.annualRate || 0).toFixed(3)}%`],
+      ];
+      const detailHeader = ['期數','還本金額','繳息金額','本息合計','貸款餘額','當期利率'];
+      const detailRows = result.rows.map(r => [
+        r.month,
+        Math.round(r.principalPaid),
+        Math.round(r.interestPaid),
+        Math.round(r.payment),
+        Math.round(r.balance),
+        `${Number(r.annualRate || 0).toFixed(3)}%`
+      ]);
 
-      equalPay.rows.forEach((a, idx) => {
-        const b = equalPrincipal.rows[idx];
-        lines.push([
-          a.month,
-          Math.round(a.principalPaid),
-          Math.round(a.interestPaid),
-          Math.round(a.payment),
-          Math.round(a.balance),
-          Math.round(b.principalPaid),
-          Math.round(b.interestPaid),
-          Math.round(b.payment),
-          Math.round(b.balance),
-          a.annualRate,
-          a.mode
-        ]);
-      });
+      const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const makeRows = (rows, header=false) => rows.map(row => `<tr>${row.map(cell => header ? `<th style="border:1px solid #000;padding:8px 10px;background:#dbe5f1;">${esc(cell)}</th>` : `<td style="border:1px solid #000;padding:8px 10px;">${esc(cell)}</td>`).join('')}</tr>`).join('');
 
-      const csv = '\uFEFF' + lines.map(row => row.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const htmlContent = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office"
+            xmlns:x="urn:schemas-microsoft-com:office:excel"
+            xmlns="http://www.w3.org/TR/REC-html40">
+      <head>
+        <meta charset="UTF-8">
+        <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>利息試算</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+      </head>
+      <body>
+        <table>
+          ${makeRows(conditionRows)}
+          <tr><td colspan="6" style="height:16px;"></td></tr>
+          ${makeRows([detailHeader], true)}
+          ${makeRows(detailRows)}
+        </table>
+      </body>
+      </html>`;
+
+      const blob = new Blob(['﻿' + htmlContent], { type: 'application/vnd.ms-excel;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = '利息試算明細.csv';
+      a.download = '利息試算結果.xls';
       a.click();
       URL.revokeObjectURL(url);
     }
 
     function validate(inputs) {
       if (inputs.loanAmount <= 0) throw new Error('貸款金額需大於 0');
+      if (inputs.loanYears <= 0) throw new Error('貸款年限需大於 0');
       if (inputs.loanMonths <= 0) throw new Error('貸款期數需大於 0');
-      if (inputs.graceMonths < 0) throw new Error('寬限期不可小於 0');
-      if (inputs.graceMonths >= inputs.loanMonths) throw new Error('寬限期必須小於貸款總期數');
     }
 
     function calculate() {
       try {
         const inputs = getInputs();
         validate(inputs);
-        const rateSchedule = getRateSchedule(inputs.loanMonths, inputs.annualRate, inputs.useAdvanced, inputs.stages);
-        const equalPay = calculateEqualPayment(inputs, rateSchedule);
-        const equalPrincipal = calculateEqualPrincipal(inputs, rateSchedule);
-        renderSummary(inputs, equalPay, equalPrincipal);
-        renderDetail(equalPay.rows, equalPrincipal.rows, inputs.displayRows);
+        const result = calculateEqualPayment(inputs);
+        renderSummary(inputs, result);
+        renderDetail(result.rows);
       } catch (err) {
-        $('detailBody').innerHTML = `<tr><td colspan="11" class="center" style="color:#b91c1c;font-weight:700;padding:20px;">${err.message}</td></tr>`;
-        [
-          'sumEqualTotalPaid','sumEqualInterest','sumEqualInterestRatio','sumEqualMaxPayment','sumEqualGracePayment','sumEqualLongRate',
-          'sumPrincipalTotalPaid','sumPrincipalInterest','sumPrincipalInterestRatio','sumPrincipalMaxPayment','sumPrincipalLastPayment','sumPrincipalLongRate'
-        ].forEach(id => $(id).textContent = '-');
+        $('detailBody').innerHTML = `<tr><td colspan="6" class="center error" style="padding:20px;">${err.message}</td></tr>`;
+        ['sumMonthlyPayment','sumEqualTotalPaid','sumEqualInterest','sumEqualInterestRatio','sumEqualLongRate']
+          .forEach(id => $(id).textContent = '-');
       }
     }
 
     function resetForm() {
-      $('loanAmount').value = 7380000;
+      $('loanAmount').value = 8800000;
       $('annualRate').value = 2.2;
       $('loanYears').value = 30;
-      $('loanMonths').value = 360;
-      $('graceMonths').value = 36;
-      $('displayRows').value = 24;
-      $('useAdvanced').checked = false;
-      $('rate1').value = 2.4;
-      $('months1').value = 12;
-      $('rate2').value = 2.4;
-      $('months2').value = 12;
-      $('rate3').value = 2.4;
-      $('months3').value = 12;
       calculate();
     }
 
-    [
-      'loanAmount','annualRate','loanYears','loanMonths','graceMonths','displayRows',
-      'useAdvanced','rate1','months1','rate2','months2','rate3','months3'
-    ].forEach(id => {
+    ['loanAmount','annualRate','loanYears'].forEach(id => {
       $(id).addEventListener('input', calculate);
       $(id).addEventListener('change', calculate);
     });
 
-    $('loanYears').addEventListener('change', syncMonthsFromYears);
-    $('loanMonths').addEventListener('change', syncYearsFromMonths);
     $('calcBtn').addEventListener('click', calculate);
-    $('csvBtn').addEventListener('click', exportCSV);
+    $('excelBtn').addEventListener('click', exportExcel);
     $('printBtn').addEventListener('click', () => window.print());
     $('resetBtn').addEventListener('click', resetForm);
 
